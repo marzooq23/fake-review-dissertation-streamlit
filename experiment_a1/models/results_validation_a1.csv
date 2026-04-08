@@ -1,0 +1,3 @@
+model,threshold,accuracy,f1_macro,f1_weighted,roc_auc,pr_auc,precision_gen,recall_gen,f1_gen,precision_fake,recall_fake,f1_fake
+LR — validation,0.609,0.7867,0.5912,0.8158,0.7345,0.2343,0.9306,0.8238,0.8739,0.2313,0.4632,0.3086
+LightGBM — validation,0.586,0.7965,0.5939,0.8218,0.7319,0.2343,0.9288,0.8375,0.8807,0.2362,0.439,0.3071

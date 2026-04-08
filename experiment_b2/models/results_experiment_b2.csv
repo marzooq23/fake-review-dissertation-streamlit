@@ -1,0 +1,3 @@
+model,threshold,accuracy,f1_macro,f1_weighted,roc_auc,pr_auc,precision_gen,recall_gen,f1_gen,precision_fake,recall_fake,f1_fake
+Logistic Regression — test,0.88,0.9518,0.5943,0.9535,0.8043,0.1374,0.9774,0.9729,0.9751,0.1991,0.2299,0.2134
+LightGBM — test,0.077,0.992,0.9246,0.9919,0.9734,0.8859,0.9946,0.9972,0.9959,0.8954,0.815,0.8533

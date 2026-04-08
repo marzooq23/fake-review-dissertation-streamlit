@@ -1,0 +1,26 @@
+venv/
+__pycache__/
+*.pyc
+
+# Large raw data files (not needed for deployment)
+*.zip
+*.xlsx
+yelp*.csv
+experiment_a1/embeddings_all_reviews.npy
+
+# Keep experiment model artifacts, ignore heavy matrices/arrays/images
+experiment_a1/models/*.npz
+experiment_a1/models/*.npy
+experiment_a1/models/*.png
+experiment_b1/models/*.npz
+experiment_b1/models/*.npy
+experiment_b1/models/*.png
+experiment_b2/models/*.npz
+experiment_b2/models/*.npy
+experiment_b2/models/*.png
+
+# Misc analysis outputs not required at runtime
+*.png
+b1_vs_b2_rank_shift.csv
+feature_group_attribution.csv
+key_findings.csv
