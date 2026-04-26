@@ -55,7 +55,11 @@ def load_experiment_assets(experiment: str) -> Dict[str, object]:
 
 @st.cache_data(show_spinner=False)
 def load_unfiltered_dataset() -> pd.DataFrame:
-    df = pd.read_csv("yelp_nyc_processed_v2.csv")
+    try:
+        df = pd.read_csv("yelp_nyc_processed_v2.csv")
+    except FileNotFoundError:
+        # Fallback for Streamlit Cloud where the 474MB CSV is not uploaded
+        df = joblib.load("artefacts/unfiltered_dataset_stub.pkl")
     if "rating" not in df.columns and "star_rating" in df.columns:
         df = df.rename(columns={"star_rating": "rating"})
     if "review_id" not in df.columns:
