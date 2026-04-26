@@ -14,8 +14,8 @@ apply_custom_css()
 st.markdown(
     """
     <div class="hero-card">
-      <h1>Fake Review Detection Under Imbalance</h1>
-      <p>Understanding the trade-off between data quantity and behavioral intelligence</p>
+      <h1>Catching Fake Reviews: The Power of User Behavior</h1>
+      <p>Why looking at <i>how</i> people write reviews is better than just looking at <i>what</i> they write, even with less data.</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -24,17 +24,17 @@ section_divider()
 
 st.markdown(
     """
-    ### Navigate the dissertation demo
+    ### Navigate the application
     Use the sidebar pages:
-    - `Experiment Comparison`
-    - `Review Explorer`
-    - `Single Review Demo`
-    - `SHAP Analysis`
-    - `Notebook Showcase`
+    - `Comparing the AI Models` (formerly Experiment Comparison)
+    - `Interactive Review Explorer` (formerly Review Explorer)
+    - `Inside the AI's Brain` (formerly SHAP Analysis)
+    - `Behind the Scenes (Code)` (formerly Notebook Showcase)
     """
 )
 
 insight_banner(
-    "🔵 Core finding: filtering reduces fake-review prevalence, but behavioral intelligence recovers detection power on the same filtered split.",
+    "🔵 Our Main Discovery: While cleaning up data accidentally removed a lot of obvious fake reviews, looking at user behavior allowed our AI to catch the clever ones anyway.",
     tone="info",
 )
+

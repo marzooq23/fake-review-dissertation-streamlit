@@ -2,7 +2,7 @@ import os
 import sys
 import streamlit as st
 
-st.set_page_config(page_title="Review Explorer", page_icon="🔍", layout="wide")
+st.set_page_config(page_title="2. Interactive Review Explorer", page_icon="🔍", layout="wide")
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.data_loader import (
     load_filtered_dataset,
@@ -14,8 +14,8 @@ from src.data_loader import (
 from src.styles import apply_custom_css, insight_banner, section_divider
 
 apply_custom_css()
-st.markdown('<div class="hero-card"><h1>🔍 Review Explorer</h1><p>Behavioral signals reveal spam patterns invisible to text-only models.</p></div>', unsafe_allow_html=True)
-st.caption("Valid per-review comparison: B1 vs B2 only (same filtered dataset, same rows, same splits).")
+st.markdown('<div class="hero-card"><h1>🔍 2. Interactive Review Explorer</h1><p>See how reading the text isn\'t enough, but looking at user habits catches the spam.</p></div>', unsafe_allow_html=True)
+st.caption("Valid per-review comparison: Model 2 (Text-Only) vs Model 3 (Behavior-Smart) only (same clean dataset).")
 section_divider()
 
 b_df = load_filtered_dataset()
@@ -33,10 +33,10 @@ if interesting is None:
 
 interesting = interesting.head(250).copy()
 interesting["select_label"] = interesting.apply(
-    lambda r: f"{r['review_id']} | {r['reviewer_id']} -> {str(r['text'])[:80]}...",
+    lambda r: f"Review {r['review_id']} | User {r['reviewer_id']} -> {str(r['text'])[:80]}...",
     axis=1,
 )
-selected_label = st.selectbox("Select review", options=interesting["select_label"].tolist())
+selected_label = st.selectbox("Select a tricky review to analyze", options=interesting["select_label"].tolist())
 row = interesting[interesting["select_label"] == selected_label].iloc[0]
 
 st.header("Review Details")
@@ -44,9 +44,9 @@ st.markdown(f"<div class='glass-card'><p>{row['text']}</p></div>", unsafe_allow_
 c1, c2, c3 = st.columns(3)
 c1.metric("Review ID", str(row["review_id"]))
 c2.metric("Star Rating", int(row["rating"]))
-c3.metric("True Label", "Fake" if int(row["label"]) == 1 else "Genuine")
+c3.metric("True Reality", "Fake" if int(row["label"]) == 1 else "Genuine")
 
-st.header("Model Comparison")
+st.header("How the Models Voted")
 l, r = st.columns(2)
 
 row_df = b_df[b_df["review_id"] == row["review_id"]].copy().head(1)
@@ -54,20 +54,20 @@ pred_b1, prob_b1 = predict_df(row_df, b1_assets, include_behavioral=False, model
 pred_b2, prob_b2 = predict_df(row_df, b2_assets, include_behavioral=True, model_key="lgbm")
 
 with l:
-    st.subheader("B1: TF-IDF + metadata")
+    st.subheader("Model 2: Text-Only AI")
     pred_text_b1 = "🔴 Fake" if int(pred_b1[0]) == 1 else "🟢 Genuine"
-    st.metric("Prediction", pred_text_b1, f"P(fake)={float(prob_b1[0]):.3f}")
+    st.metric("Prediction", pred_text_b1, f"{float(prob_b1[0])*100:.1f}% confident it's fake")
 with r:
-    st.subheader("B2: TF-IDF + metadata + behavioral")
+    st.subheader("Model 3: Behavior-Smart AI")
     pred_text_b2 = "🔴 Fake" if int(pred_b2[0]) == 1 else "🟢 Genuine"
-    st.metric("Prediction", pred_text_b2, f"P(fake)={float(prob_b2[0]):.3f}")
+    st.metric("Prediction", pred_text_b2, f"{float(prob_b2[0])*100:.1f}% confident it's fake")
 
 if int(pred_b1[0]) != int(pred_b2[0]):
-    insight_banner("⚠️ Model disagreement: behavioral features changed the final decision.", tone="warning")
+    insight_banner("⚠️ Model disagreement: The Text-Only AI was fooled, but looking at user behavior changed the final decision.", tone="warning")
 else:
     insight_banner("✅ Both models agree on this review.", tone="success")
 
-st.header("Top Behavioral Signals Influencing B2")
+st.header("Top Behavioral Habits that tipped off the Smart AI")
 signals = readable_behavioral_signals(b2_assets["behavioral"].loc[row_df.index[0]], top_n=8)
 for idx, (title, value, text) in enumerate(signals, start=1):
     st.markdown(
@@ -75,8 +75,8 @@ for idx, (title, value, text) in enumerate(signals, start=1):
         unsafe_allow_html=True,
     )
 
-st.header("Reviewer Context")
+st.header("Other Reviews by this User (For Context)")
 ctx = b_df[(b_df["reviewer_id"] == row["reviewer_id"]) & (b_df["review_id"] != row["review_id"])].head(5)
 for _, rr in ctx.iterrows():
-    with st.expander(f"Review {rr['review_id']} | Rating {int(rr['rating'])}"):
+    with st.expander(f"Another Review | Rating {int(rr['rating'])}"):
         st.markdown(f"<div class='glass-card'><p>{rr['text']}</p></div>", unsafe_allow_html=True)
