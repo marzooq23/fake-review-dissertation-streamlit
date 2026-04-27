@@ -71,7 +71,8 @@ else:
     insight_banner("✅ Both models agree on this review.", tone="success")
 
 st.header("Top Behavioral Habits that tipped off the Smart AI")
-signals = readable_behavioral_signals(b2_assets["behavioral"].loc[row_df["b2_index"].iloc[0]], top_n=8)
+idx_to_use = row_df["b2_index"].iloc[0] if "b2_index" in row_df.columns else row_df.index[0]
+signals = readable_behavioral_signals(b2_assets["behavioral"].loc[idx_to_use], top_n=8)
 for idx, (title, value, text) in enumerate(signals, start=1):
     st.markdown(
         f"<div class='signal-panel'><b>{idx}. {title}</b>: {value:.3f}<br/>{text}</div>",
