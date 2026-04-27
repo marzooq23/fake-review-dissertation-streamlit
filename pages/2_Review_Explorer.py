@@ -11,6 +11,7 @@ from src.data_loader import (
     load_optional_analysis_artifacts,
     predict_df,
     readable_behavioral_signals,
+    load_unfiltered_dataset,
 )
 from src.styles import apply_custom_css, insight_banner, section_divider
 
@@ -78,7 +79,12 @@ for idx, (title, value, text) in enumerate(signals, start=1):
     )
 
 st.header("Other Reviews by this User (For Context)")
-ctx = b_df[(b_df["reviewer_id"] == row["reviewer_id"]) & (b_df["review_id"] != row["review_id"])].head(5)
-for _, rr in ctx.iterrows():
-    with st.expander(f"Another Review | Rating {int(rr['rating'])}"):
-        st.markdown(f"<div class='glass-card'><p>{rr['text']}</p></div>", unsafe_allow_html=True)
+full_df = load_unfiltered_dataset()
+ctx = full_df[(full_df["reviewer_id"] == row["reviewer_id"]) & (full_df["review_id"] != row["review_id"])].head(5)
+
+if ctx.empty:
+    st.info("No other reviews found for this user in the dataset.")
+else:
+    for _, rr in ctx.iterrows():
+        with st.expander(f"Another Review | Rating {int(rr['rating'])}"):
+            st.markdown(f"<div class='glass-card'><p>{rr['text']}</p></div>", unsafe_allow_html=True)
