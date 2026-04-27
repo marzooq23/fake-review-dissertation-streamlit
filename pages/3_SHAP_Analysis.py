@@ -10,7 +10,7 @@ import streamlit as st
 
 st.set_page_config(page_title="3. Inside the AI's Brain", page_icon="🧠", layout="wide")
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src.data_loader import load_filtered_dataset, load_unfiltered_dataset
+from src.data_loader import load_filtered_dataset_v2, load_unfiltered_dataset
 from src.styles import apply_custom_css, insight_banner, section_divider
 
 apply_custom_css()
@@ -59,7 +59,7 @@ def build_from_array(shap_array: np.ndarray, experiment_name: str) -> Tuple[pd.D
     if experiment_name == "A1":
         base_df = load_unfiltered_dataset()
     else:
-        base_df = load_filtered_dataset()
+        base_df = load_filtered_dataset_v2()
         
     n_rows = min(len(base_df), shap_array.shape[0], 250)
     review_ids = base_df["review_id"].astype(str).iloc[:n_rows].tolist()
