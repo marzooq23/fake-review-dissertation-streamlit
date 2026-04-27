@@ -11,7 +11,7 @@ from src.data_loader import (
     load_optional_analysis_artifacts,
     predict_df,
     readable_behavioral_signals,
-    load_unfiltered_dataset,
+    load_context_reviews,
 )
 from src.styles import apply_custom_css, insight_banner, section_divider
 
@@ -80,7 +80,7 @@ for idx, (title, value, text) in enumerate(signals, start=1):
     )
 
 st.header("Other Reviews by this User (For Context)")
-full_df = load_unfiltered_dataset()
+full_df = load_context_reviews()
 ctx = full_df[(full_df["reviewer_id"] == row["reviewer_id"]) & (full_df["review_id"] != row["review_id"])].head(5)
 
 if ctx.empty:

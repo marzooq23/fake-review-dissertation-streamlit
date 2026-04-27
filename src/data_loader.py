@@ -68,6 +68,10 @@ def load_unfiltered_dataset() -> pd.DataFrame:
 
 
 @st.cache_data(show_spinner=False)
+def load_context_reviews() -> pd.DataFrame:
+    return joblib.load("artefacts/context_reviews.pkl")
+
+@st.cache_data(show_spinner=False)
 def load_filtered_dataset() -> pd.DataFrame:
     df = joblib.load("artefacts/filtered_dataset.pkl")
     if "rating" not in df.columns and "star_rating" in df.columns:
