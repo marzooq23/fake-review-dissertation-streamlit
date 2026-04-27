@@ -6,7 +6,7 @@ import pandas as pd
 st.set_page_config(page_title="2. Interactive Review Explorer", page_icon="🔍", layout="wide")
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.data_loader import (
-    load_filtered_dataset,
+    load_filtered_dataset_v2,
     load_experiment_assets,
     load_optional_analysis_artifacts,
     predict_df,
@@ -20,7 +20,7 @@ st.markdown('<div class="hero-card"><h1>🔍 2. Interactive Review Explorer</h1>
 st.caption("Valid per-review comparison: Model 2 (Text-Only) vs Model 3 (Behavior-Smart) only (same clean dataset).")
 section_divider()
 
-b_df = load_filtered_dataset()
+b_df = load_filtered_dataset_v2()
 b1_assets = load_experiment_assets("B1")
 b2_assets = load_experiment_assets("B2")
 b2_assets["vectorizer"] = b1_assets["vectorizer"]

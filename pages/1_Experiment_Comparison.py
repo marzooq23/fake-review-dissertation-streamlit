@@ -6,7 +6,7 @@ import streamlit as st
 
 st.set_page_config(page_title="1. Comparing the AI Models", page_icon="📊", layout="wide")
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src.data_loader import load_filtered_dataset, load_results_table, load_unfiltered_dataset
+from src.data_loader import load_filtered_dataset_v2, load_results_table, load_unfiltered_dataset
 from src.styles import apply_custom_css, insight_banner, section_divider
 
 apply_custom_css()
@@ -14,7 +14,7 @@ st.markdown('<div class="hero-card"><h1>📊 1. Comparing the AI Models</h1><p>S
 section_divider()
 
 a1_df = load_unfiltered_dataset()
-b_df = load_filtered_dataset()
+b_df = load_filtered_dataset_v2()
 
 metrics = pd.concat(
     [load_results_table("A1"), load_results_table("B1"), load_results_table("B2")], ignore_index=True
