@@ -98,7 +98,8 @@ def prepare_features(df: pd.DataFrame, assets: Dict[str, object], include_behavi
     if include_behavioral:
         tfidf_names = list(assets["vectorizer"].get_feature_names_out())
         behav_cols = [c for c in assets["feature_names"] if c not in tfidf_names + META_COLS]
-        X_behav = assets["behavioral"].loc[df.index, behav_cols].values
+        idx = df["b2_index"].values if "b2_index" in df.columns else df.index
+        X_behav = assets["behavioral"].loc[idx, behav_cols].values
         X_behav = assets["behav_scaler"].transform(X_behav)
         mats.append(sp.csr_matrix(X_behav))
     return sp.hstack(mats, format="csr")

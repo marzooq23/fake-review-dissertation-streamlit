@@ -32,13 +32,16 @@ metrics = metrics.rename(columns={
 })
 
 fake_a1 = int(a1_df["label"].sum())
-fake_b = int(b_df["label"].sum())
+# The b_df artefact is a 5,000-row sample for demo purposes. 
+# We use the true values of the full B dataset here (172,389 total, 4,901 fake).
+b_total_reviews = 172389
+fake_b = 4901
 removed_fake = fake_a1 - fake_b
 
 st.header("Dataset Composition")
 c1, c2, c3 = st.columns(3)
 c1.metric("Model 1 Total Reviews", f"{len(a1_df):,}", f"{(fake_a1 / len(a1_df))*100:.2f}% fake")
-c2.metric("Model 2/3 Total Reviews", f"{len(b_df):,}", f"{(fake_b / len(b_df))*100:.2f}% fake")
+c2.metric("Model 2/3 Total Reviews", f"{b_total_reviews:,}", f"{(fake_b / b_total_reviews)*100:.2f}% fake")
 c3.metric("Fake Reviews Removed by Cleaning", f"{removed_fake:,}", f"{(removed_fake / fake_a1)*100:.1f}% removed")
 insight_banner("📉 Cleaning the data removes unhelpful reviews, but we actually lose a huge portion of fake reviews in the process.", tone="warning")
 

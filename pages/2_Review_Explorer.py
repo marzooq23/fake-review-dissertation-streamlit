@@ -29,14 +29,15 @@ if interesting is None:
     if "prediction_b1" not in b_df.columns or "prediction_b2" not in b_df.columns:
         st.error("Missing precomputed interesting review artefact and model predictions in filtered dataset.")
         st.stop()
-    interesting = b_df[(b_df["label"] == 1) & (b_df["prediction_b1"] == 0) & (b_df["prediction_b2"] == 1)].copy()
+tricky = b_df[(b_df["label"] == 1) & (b_df["prediction_b1"] == 0) & (b_df["prediction_b2"] == 1)].head(150).copy()
+normal_genuine = b_df[(b_df["label"] == 0) & (b_df["prediction_b2"] == 0)].head(100).copy()
+interesting = pd.concat([tricky, normal_genuine]).sample(frac=1, random_state=42).copy()
 
-interesting = interesting.head(250).copy()
 interesting["select_label"] = interesting.apply(
-    lambda r: f"Review {r['review_id']} | User {r['reviewer_id']} -> {str(r['text'])[:80]}...",
+    lambda r: f"{'🚨 TRICKY FAKE' if r['label'] == 1 else '✅ GENUINE'} | Review {r['review_id']} | User {r['reviewer_id']} -> {str(r['text'])[:60]}...",
     axis=1,
 )
-selected_label = st.selectbox("Select a tricky review to analyze", options=interesting["select_label"].tolist())
+selected_label = st.selectbox("Select a review to analyze", options=interesting["select_label"].tolist())
 row = interesting[interesting["select_label"] == selected_label].iloc[0]
 
 st.header("Review Details")
@@ -68,7 +69,7 @@ else:
     insight_banner("✅ Both models agree on this review.", tone="success")
 
 st.header("Top Behavioral Habits that tipped off the Smart AI")
-signals = readable_behavioral_signals(b2_assets["behavioral"].loc[row_df.index[0]], top_n=8)
+signals = readable_behavioral_signals(b2_assets["behavioral"].loc[row_df["b2_index"].iloc[0]], top_n=8)
 for idx, (title, value, text) in enumerate(signals, start=1):
     st.markdown(
         f"<div class='signal-panel'><b>{idx}. {title}</b>: {value:.3f}<br/>{text}</div>",
